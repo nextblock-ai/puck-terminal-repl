@@ -1,0 +1,39 @@
+export const codeEnhancer2grammar = `CodeEnhancer2 {
+    CodeEnhancerMessage=(Delimiters Title)+
+    Title=(~(Delimiters) any)*
+    Delimiters=(Error|TargetFile|Finish|Dependency|Diff|FileRequest|Announce)
+    Error="⛔"
+    TargetFile="💽"
+    Finish="🏁"
+    Dependency="🧩"
+    Diff="💠"
+    FileRequest="📤"
+    Announce="📢"
+}`;
+export const codeEnhancer3grammar = `CodeEnhancer3 {
+    CodeEnhancerMessage=(Delimiters Title)+
+    Title=(~(Delimiters) any)*
+    Delimiters=(Error|TargetFile|Finish|Dependency|Diff|FileRequest|BashCommand|VSCodeCommand|Announce)
+    Error="⛔"
+    TargetFile="💽"
+    Finish="🏁"
+    Dependency="🧩"
+    Diff="💠"
+    FileRequest="📤"
+    BashCommand="🖥️"
+    VSCodeCommand="🆚"
+    Announce="📢"
+}`;
+export const codeEnhancerGrammar = `CodeEnhancer {
+    CodeEnhancerMessage=(Delimiters Title)+
+    Title=(~(Delimiters) any)*
+    Delimiters=(Error|Warning|Finish|BashCommand|VSCommand|Message|OpenTask|CompleteTask)
+    Error="⛔"
+    Warning="⚠️"
+    Finish="🏁"
+    BashCommand="🖥️"
+    VSCommand="🆚"
+    Message="💬"
+    OpenTask="📬"
+    CompleteTask="📭"
+}`;
