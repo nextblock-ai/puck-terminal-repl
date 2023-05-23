@@ -1,20 +1,39 @@
-# extension-terminal-sample
+# Puck Terminal REPL
 
-This extension shows how to leverage the extension terminal API stabilized in v1.39 that enables an extension to handle a terminal's input and emit output.
+This is an AI-enabled terminal REPL extension for VS-Code. It allows users to enter natural-language commands and get responses from the terminal. It is powered by OpenAI's GPT-4. 
 
-## VS Code API
+## Features
 
-### `vscode` module
+- Natural language terminal REPL
+- Create new code / files / folders / documentation
+- Run code
+- Fix bugs
+- Write tests
+- etc.
 
-- [window.createTerminal](https://code.visualstudio.com/api/references/vscode-api#window.createTerminal)
+The REPL can decompose a request into a set of tasks performable by the AI and then execute them. For example, if you ask it to create a new file it will create the file for you.
 
-### Contribution Points
+## Requirements
 
-- [`contributes.commands`](https://code.visualstudio.com/api/references/contribution-points#contributes.commands)
+- VS-Code
+- OpenAI API key
 
-## Running the Sample
+## Extension Settings
 
-- Run `npm install` in terminal to install dependencies
-- Run the `Run Extension` target in the Debug View. This will:
-	- Start a task `npm: watch` to compile the code
-	- Run the extension in a new VS Code window
+This extension contributes the following settings:
+
+No settings yet.
+
+## Installation
+
+1. Install the extension
+
+2. Get an OpenAI API key
+
+3. Set the API key in the settings
+
+4. Open the terminal and type a command.
+
+## Contributing
+
+This is an open-source project. Contributions are welcome. Please see the [contributing guide](CONTRIBUTING.md) for more information.
