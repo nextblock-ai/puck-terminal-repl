@@ -1,7 +1,7 @@
 {
 	"name": "puck-terminal-repl",
-	"displayName": "puck-terminal-repl",
-	"description": "A GPT-4-driven conversational command terminal for VS Code",
+	"displayName": "Puck Terminal REPL",
+	"description": "A GPT-4-driven terminal REPL for VS Code",
 	"version": "0.0.1",
 	"publisher": "NextBlock.ai",
 	"private": true,
