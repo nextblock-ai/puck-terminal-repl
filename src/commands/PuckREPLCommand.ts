@@ -7,8 +7,10 @@ import { Command } from "../utils/Command";
 import triage from "../agents/triage";
 import { getProgrammingAnswer } from "../agents/answerer";
 import CodeEnhancer from "../agents/commander";
-import CodeEnhancer3 from "../agents/coder";
+import CodeEnhancer4 from "../agents/coder";
 import getDocumentation from "../agents/documenter";
+import { CodeEnhancerPrompt } from "../sps/semantic-agents";
+import CodeEnhancer9 from "../agents/coder";
 
 function colorText(text: string, colorIndex: number): string {
 	let output = '';
@@ -33,8 +35,32 @@ export default class PuckREPLCommand extends Command {
 	sps: any;
 
 	_spinner = {
-		interval: 100,
-		frames: ['🌍', '🌎', '🌏'],
+		interval: 50,
+		frames: [
+			"🕐",
+			"🕑",
+			"🕒",
+			"🕓",
+			"🕔",
+			"🕕",
+			"🕖",
+			"🕗",
+			"🕘",
+			"🕙",
+			"🕚",
+			"🕛",
+			"🕜",
+			"🕝",
+			"🕞",
+			"🕟",
+			"🕠",
+			"🕡",
+			"🕢",
+			"🕣",
+			"🕤",
+			"🕥",
+			"🕦"
+			],
 		currentFrame: 0,
 		handle: null,
 	};
@@ -150,6 +176,9 @@ export default class PuckREPLCommand extends Command {
 			case '🖥️':
 				await this.handleCommandExecutionRequest(triageLine);
 				break;
+			case '🧪':
+				await this.handleCustomExecution(triageLine);
+				break;
 			default:
 				await this.handleUnknownRequest(triageLine);
 				break;
@@ -161,19 +190,26 @@ export default class PuckREPLCommand extends Command {
 	}
 	async handleTestAndDocumentationRequest(line: string) {
 		this.writeEmitter.fire('\r\n📚 Documentation/test request\r\n');
-		const answer = await getProgrammingAnswer(line);
+		this.sps = new CodeEnhancer9(super.context, this.writeEmitter);
+		const answer = await this.sps.handleUserRequest(line.slice(2));
 		this.writeEmitter.fire(answer);
 	}
 	async handleCodeRelatedRequest(line: string) {
 		this.writeEmitter.fire('\r\n💡 Code-related request\r\n');
-		this.sps = new CodeEnhancer3(super.context, this.writeEmitter);
-		const result = await this.sps.handleUserRequest(line);
+		this.sps = new CodeEnhancer9(super.context, this.writeEmitter);
+		const result = await this.sps.handleUserRequest(line.slice(2));
+		this.writeEmitter.fire(result);
+	}
+	async handleCustomExecution(line: string) {
+		this.writeEmitter.fire('\r\n🧪 Custom execution\r\n');
+		this.sps = new CodeEnhancer9(super.context, this.writeEmitter);
+		const result = await this.sps.handleUserRequest('📢 ' + line.slice(2));
 		this.writeEmitter.fire(result);
 	}
 	async handleCommandExecutionRequest(line: string) {
 		this.writeEmitter.fire('\r\n🖥️ Command execution\r\n');
-		this.sps = new CodeEnhancer(super.context, this.writeEmitter);
-		const result = await this.sps.handleUserRequest(line);
+		this.sps = new CodeEnhancer9(super.context, this.writeEmitter);
+		const result = await this.sps.handleUserRequest(line.slice(2));
 		this.writeEmitter.fire(result);
 	}
 	async handleUnknownRequest(line: string) {
@@ -213,12 +249,11 @@ export default class PuckREPLCommand extends Command {
 	}
 
     async execute() {
-		if(this.terminal) {
-			this.terminal.show();
+		const terminal = vscode.window.createTerminal({ name: `Puck Terminal REPL`, pty: this.pty });
+		if(terminal) {
+			terminal.show();
 			return;
 		}
-		this.terminal = vscode.window.createTerminal({ name: `Puck Terminal REPL`, pty: this.pty });
-		
     }
 
 	async processCommand(command: string) {

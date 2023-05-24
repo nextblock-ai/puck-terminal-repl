@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Ohm from 'ohm-js';
 import * as fs from 'fs';
-import { adhocChatMessage, sendQuery } from '../utils/gpt';
+import { adhocChatMessage, countTokens, sendQuery } from '../utils/gpt';
 
 // an action handler for a semantic action
 export type SemanticActionHandler = Ohm.ActionDict<unknown>;
@@ -39,10 +39,16 @@ export default class SPS {
     // perform a single iteration of the SPS
     async iterate(semanticActionHandler: SemanticActionHandler): Promise<any> {
         this.semanticActionHandler = semanticActionHandler;
+        const tokenCount = countTokens(this.inputBuffer.map((message) => message.content).join(' '));
+        let maxTokens = 8192 - tokenCount;
+        maxTokens = maxTokens > 2048 ? 2048 : maxTokens;
+        if(maxTokens < 0) {
+            throw new Error('Input buffer exceeds maximum token count');
+        }
         let response = await sendQuery({
             model: 'gpt-4',
             temperature: 0.8,
-            max_tokens: 2048,
+            max_tokens: maxTokens,
             top_p: 0.8,
             messages: [{
                 role: 'system',
@@ -64,13 +70,13 @@ export default class SPS {
                 this.addMessageToInputBuffer({
                     role: 'system',
                     content: 'INVALID OUTPUT FORMAT. Please review the instructions and try again.'
-                });
+        });
                 console.log(`invalid output format: ${response}`);
-                await this.iterate(semanticActionHandler);
             }
-        } catch (e) { 
-            await this.iterate(semanticActionHandler);
+        } catch (e) {
+            // Log the error if needed
         }
+        return await this.iterate(semanticActionHandler);
     }
 
     // execute the SPS - iterates until explicitly disabled

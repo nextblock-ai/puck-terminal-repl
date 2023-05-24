@@ -24,6 +24,12 @@ const persomDelimiter = "👤";
 const assistantDelimiter = "🤖";
 const systemDelimiter = "🌐";
 
+export function countTokens(str: any) {
+    const regex = /[\s\n]+/gi;
+    const tokens = str.split(regex);
+    return tokens.length;
+}
+
 export interface MessageHistoryItem {
     conversation: adhocChatConversation;
     request: adhocChatMessage;
@@ -48,30 +54,24 @@ export async function sendQuery(query: adhocChatConversation): Promise<string> {
     const config = vscode.workspace.getConfiguration('puck.adhocChat');
     const apikey = getOpenAIKey();
     delete query.apikey;
-    try {
-        const response = await axios.post(
-            'https://api.openai.com/v1/chat/completions',
-            JSON.stringify(query), {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apikey}`,
-            },
-        }
-        );
-        if (response.data && response.data.choices && response.data.choices.length > 0) {
-            log(`Chat completion: ${response.data.choices[0].message.content}`);
-            const res = response.data.choices[0].message.content;
-           // saveMessages([...query.messages, { role: 'assistant', content: res }] as any);
-            return res;
-        } else {
-            // we show an error notification if the response is empt
-            throw new Error('No completion found');
-        }
-    } catch (error: any) {
-        vscode.window.showErrorMessage('Error: ' + error.message);
-        throw error;
+    const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        JSON.stringify(query), {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apikey}`,
+        },
     }
-
+    );
+    if (response.data && response.data.choices && response.data.choices.length > 0) {
+        log(`Chat completion: ${response.data.choices[0].message.content}`);
+        const res = response.data.choices[0].message.content;
+       // saveMessages([...query.messages, { role: 'assistant', content: res }] as any);
+        return res;
+    } else {
+        // we show an error notification if the response is empt
+        throw new Error('No completion found');
+    }
 }
 
 export async function sendChatQuery(messages: any[], prompt: string, inputText?: string): Promise<adhocChatMessage[]> {

@@ -37,3 +37,18 @@ export const codeEnhancerGrammar = `CodeEnhancer {
     OpenTask="📬"
     CompleteTask="📭"
 }`;
+export const codeEnhancer4Grammar = `CodeEnhancer4 {
+    CodeEnhancerMessage=(Delimiters Title)+
+    Title=(~(Delimiters) any)*
+    Delimiters=(Error|TargetFile|Finish|Diff|FileRequest|BashCommand|VSCodeCommand|Announce|OpenTask|CompleteTask)
+    Error="⛔"
+    TargetFile="💽"
+    Finish="🏁"
+    Diff="💠"
+    FileRequest="📤"
+    BashCommand="🖥️"
+    VSCodeCommand="🆚"
+    Announce="📢"
+    OpenTask="📬"
+    CompleteTask="📭"
+}`;

@@ -109,10 +109,6 @@ export default class SPS {
                 console.log('Execution stopped');
                 return result;
             }
-            if (!this._executing) {
-                console.log('Execution completed');
-                return result;
-            } 
             return _run();
         }; 
         return _run();

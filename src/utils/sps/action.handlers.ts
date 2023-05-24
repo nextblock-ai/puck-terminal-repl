@@ -81,6 +81,7 @@ export function getActionHandlers(sps: any) {
             return msg;
         },
 		addOpenTaskToTaskList: (msg: string) => {
+            if(!msg) return;
 			const taskName = msg.replace('📬', '').trim();
 			if(sps.openTasks.includes(taskName)) {
 				return msg + ' - already open';
@@ -91,6 +92,7 @@ export function getActionHandlers(sps: any) {
 			return msg;
 		},
 		removeOpenTaskFromTaskList: (msg: string) => {
+            if(!msg) return;
 			const taskName = msg.replace('📭', '').trim();
 			// check to see if the task is already open
 			if(!sps.openTasks.includes(taskName)) {
